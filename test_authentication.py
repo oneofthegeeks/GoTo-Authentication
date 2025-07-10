@@ -10,6 +10,7 @@ import os
 import sys
 import json
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
 # Add the library to the path for testing
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '.'))

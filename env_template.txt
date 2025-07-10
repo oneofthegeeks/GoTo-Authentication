@@ -1,0 +1,10 @@
+# GoTo Connect API Credentials
+# Copy this file to .env and replace with your actual values from the GoTo Developer Portal
+
+GOTO_CLIENT_ID=your_client_id_here
+GOTO_CLIENT_SECRET=your_client_secret_here
+GOTO_REDIRECT_URI=http://localhost:8080/callback
+
+# Optional: Token storage method (keyring, file, memory)
+# Default is keyring if available, otherwise file
+GOTO_TOKEN_STORAGE=keyring 
