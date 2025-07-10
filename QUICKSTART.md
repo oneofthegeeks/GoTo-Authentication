@@ -71,7 +71,19 @@ else:
     print("Authentication failed!")
 ```
 
-## Step 5: Run the Examples
+## Step 5: Test Your Setup
+
+After configuring your credentials, test that everything is working:
+
+```bash
+# Quick test (recommended first)
+python quick_test.py
+
+# Comprehensive test (all features)
+python test_authentication.py
+```
+
+## Step 6: Run the Examples
 
 The library comes with several examples:
 

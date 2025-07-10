@@ -294,6 +294,8 @@ for user in users['users']:
 
 ## 🧪 Testing
 
+### Unit Tests
+
 Run the test suite to verify everything works:
 
 ```bash
@@ -302,6 +304,44 @@ python -m pytest tests/ -v
 
 # Run with coverage
 python -m pytest tests/ --cov=gotoconnect_auth --cov-report=html
+```
+
+### Authentication Validation
+
+After setting up your credentials, you can test your authentication setup:
+
+```bash
+# Quick test (recommended for first-time setup)
+python quick_test.py
+
+# Comprehensive test (tests all features)
+python test_authentication.py
+```
+
+The test scripts will:
+- ✅ Verify your credentials are configured correctly
+- ✅ Test OAuth authentication flow
+- ✅ Validate API connectivity
+- ✅ Test token storage functionality
+- ✅ Verify meeting operations (comprehensive test only)
+- ✅ Provide detailed feedback on any issues
+
+**Quick Test Output Example:**
+```
+🔍 GoTo Connect Authentication Quick Test
+==================================================
+✅ Successfully imported gotoconnect_auth library
+✅ Credentials found in .env file
+🔄 Initializing authentication...
+✅ Authentication object created successfully
+🔄 Testing authentication...
+✅ Authentication successful!
+🔄 Testing API connectivity...
+✅ API test successful!
+👤 Authenticated as: John Doe
+📧 Email: john.doe@example.com
+
+🎉 Quick test passed! Your authentication library is working correctly.
 ```
 
 ## 📚 Examples
