@@ -8,6 +8,7 @@ Run this after setting up your credentials to verify everything works.
 
 import os
 import sys
+import time
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -49,15 +50,24 @@ def main():
         
         # Test authentication
         print("🔄 Testing authentication...")
-        auth.authenticate()
+        try:
+            auth.authenticate()
+            print("✅ Authentication successful!")
+        except Exception as e:
+            print(f"❌ Authentication failed: {e}")
+            return False
+        
+        # Wait a moment for tokens to be processed
+        time.sleep(1)
         
         if auth.is_authenticated():
-            print("✅ Authentication successful!")
+            print("✅ Token validation successful!")
             
             # Test a simple API call
             print("🔄 Testing API connectivity...")
             try:
-                response = auth.get("https://api.goto.com/rest/users/v1/users/me")
+                # Add timeout to the request
+                response = auth.get("https://api.goto.com/rest/users/v1/users/me", timeout=30)
                 if response.status_code == 200:
                     user_data = response.json()
                     print(f"✅ API test successful!")
@@ -71,7 +81,7 @@ def main():
                 print(f"❌ API test failed: {e}")
                 return False
         else:
-            print("❌ Authentication failed")
+            print("❌ Token validation failed")
             return False
             
     except Exception as e:
