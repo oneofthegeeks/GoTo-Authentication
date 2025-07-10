@@ -101,7 +101,8 @@ class GoToConnectAuth:
         redirect_uri: str = "http://localhost:8080/callback",
         token_storage: Optional[TokenStorage] = None,
         auth_url: Optional[str] = None,
-        token_url: Optional[str] = None
+        token_url: Optional[str] = None,
+        scope: Optional[str] = None
     ):
         """
         Initialize the GoTo Connect authentication client.
@@ -119,6 +120,7 @@ class GoToConnectAuth:
         self.redirect_uri = redirect_uri
         self.auth_url = auth_url or self.AUTH_URL
         self.token_url = token_url or self.TOKEN_URL
+        self.scope = scope
         
         # Initialize token storage
         self.token_storage = token_storage or KeyringTokenStorage()
@@ -142,6 +144,7 @@ class GoToConnectAuth:
         redirect_uri = os.getenv('GOTO_REDIRECT_URI', 'http://localhost:8080/callback')
         auth_url = os.getenv('GOTO_AUTH_URL')
         token_url = os.getenv('GOTO_TOKEN_URL')
+        scope = os.getenv('GOTO_SCOPE')  # None if not set
         
         if not client_id or not client_secret:
             raise ConfigurationError(
@@ -154,6 +157,7 @@ class GoToConnectAuth:
             redirect_uri=redirect_uri,
             auth_url=auth_url,
             token_url=token_url,
+            scope=scope,
             **kwargs
         )
     
@@ -200,36 +204,38 @@ class GoToConnectAuth:
         # Perform OAuth 2.0 authorization code flow
         self._perform_oauth_flow()
     
-    def _perform_oauth_flow(self) -> None:
-        """Perform the OAuth 2.0 authorization code flow."""
-        # Start local server to handle callback
+    def _perform_oauth_flow(self, timeout=180):
+        """Perform the OAuth 2.0 authorization code flow with timeout and graceful shutdown."""
+        import time
         server = self._start_callback_server()
-        
+        start_time = time.time()
         try:
             # Generate authorization URL
             auth_params = {
                 'response_type': 'code',
                 'client_id': self.client_id,
                 'redirect_uri': self.redirect_uri,
-                'scope': 'meetings:read meetings:write users:read',
                 'state': 'random_state_string'
             }
-            
+            # Only add scope if specified
+            if self.scope:
+                auth_params['scope'] = self.scope
             auth_url = f"{self.auth_url}?{urlencode(auth_params)}"
-            
-            # Open browser for user authorization
             print(f"Opening browser for authentication...")
             webbrowser.open(auth_url)
-            
-            # Wait for callback
+            print(f"Waiting for OAuth callback (timeout in {timeout} seconds)... Press Ctrl+C to cancel.")
             while not self._auth_code:
+                if time.time() - start_time > timeout:
+                    print("❌ Timeout waiting for OAuth callback.")
+                    break
                 time.sleep(0.1)
-            
-            # Exchange authorization code for tokens
+            if not self._auth_code:
+                raise AuthenticationError("OAuth callback not received in time.")
             self._exchange_code_for_tokens()
-            
+        except KeyboardInterrupt:
+            print("\n⚠️  Authentication cancelled by user.")
+            raise
         finally:
-            # Stop the callback server
             server.shutdown()
             server.server_close()
     
