@@ -55,7 +55,9 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
                 return
             if 'code' in query_params:
                 auth_code = query_params['code'][0]
+                print(f"🔍 Received authorization code: {auth_code[:20]}...")
                 self.auth_instance._auth_code = auth_code
+                print("✅ Authorization code set successfully!")
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
@@ -74,6 +76,7 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
                 self.send_response(204)
                 self.end_headers()
         except Exception as e:
+            print(f"❌ Callback handler error: {e}")
             self.send_response(500)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
@@ -225,14 +228,23 @@ class GoToConnectAuth:
             print(f"Opening browser for authentication...")
             webbrowser.open(auth_url)
             print(f"Waiting for OAuth callback (timeout in {timeout} seconds)... Press Ctrl+C to cancel.")
+            
+            # Wait for auth code with debug output
             while not self._auth_code:
                 if time.time() - start_time > timeout:
                     print("❌ Timeout waiting for OAuth callback.")
                     break
                 time.sleep(0.1)
+            
             if not self._auth_code:
                 raise AuthenticationError("OAuth callback not received in time.")
+            
+            print(f"✅ Authorization code received: {self._auth_code[:20]}...")
+            print("🔄 Exchanging code for tokens...")
+            
             self._exchange_code_for_tokens()
+            print("✅ Token exchange completed successfully!")
+            
         except KeyboardInterrupt:
             print("\n⚠️  Authentication cancelled by user.")
             raise
