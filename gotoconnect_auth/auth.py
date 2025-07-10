@@ -30,21 +30,35 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
         super().__init__(*args, **kwargs)
     
     def do_GET(self):
-        """Handle GET request for OAuth callback."""
         try:
-            # Parse the authorization code from the callback URL
             parsed_url = urlparse(self.path)
             query_params = parse_qs(parsed_url.query)
-            
-            if 'code' in query_params:
-                auth_code = query_params['code'][0]
-                self.auth_instance._auth_code = auth_code
-                
-                # Send success response
+            # Ignore favicon and any request without 'code'
+            if parsed_url.path == '/favicon.ico':
+                self.send_response(204)
+                self.end_headers()
+                return
+            # If already authenticated, show a simple message
+            if getattr(self.auth_instance, '_auth_code', None):
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
-                
+                response_html = """
+                <html>
+                <body>
+                    <h1>Already Authenticated</h1>
+                    <p>You can close this window now.</p>
+                </body>
+                </html>
+                """
+                self.wfile.write(response_html.encode())
+                return
+            if 'code' in query_params:
+                auth_code = query_params['code'][0]
+                self.auth_instance._auth_code = auth_code
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
                 response_html = """
                 <html>
                 <body>
@@ -56,26 +70,13 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
                 """
                 self.wfile.write(response_html.encode())
             else:
-                # Send error response
-                self.send_response(400)
-                self.send_header('Content-type', 'text/html')
+                # Ignore requests without code (e.g., stray /callback hits)
+                self.send_response(204)
                 self.end_headers()
-                
-                response_html = """
-                <html>
-                <body>
-                    <h1>Authentication Failed!</h1>
-                    <p>No authorization code received.</p>
-                </body>
-                </html>
-                """
-                self.wfile.write(response_html.encode())
-                
         except Exception as e:
             self.send_response(500)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
-            
             response_html = f"""
             <html>
             <body>

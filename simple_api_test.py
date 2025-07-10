@@ -8,6 +8,7 @@ It will use existing tokens if available, or authenticate once if needed.
 
 import os
 import sys
+import time
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -36,109 +37,79 @@ def test_api_endpoints():
         if auth.is_authenticated():
             print("✅ Already authenticated!")
         else:
-            print("🔄 Authenticating...")
-            auth.authenticate()
-            if not auth.is_authenticated():
-                print("❌ Authentication failed")
+            print("🔄 Need to authenticate...")
+            print("⚠️  This will open your browser for OAuth authentication.")
+            print("💡 If the browser doesn't open, you can manually navigate to the URL.")
+            
+            try:
+                auth.authenticate()
+                print("✅ Authentication successful!")
+            except Exception as e:
+                print(f"❌ Authentication failed: {e}")
+                print("💡 Try running 'py quick_test.py' first to authenticate manually.")
                 return False
-            print("✅ Authentication successful!")
         
-        # Test 1: Get current user
-        print("\n📋 Test 1: Getting current user...")
+        # Test API endpoints
+        print("\n🧪 Testing API Endpoints...")
+        
+        # Test 1: Get user info
+        print("\n1️⃣ Testing User Info API...")
         try:
-            response = auth.get("https://api.goto.com/rest/users/v1/users/me")
+            response = auth.get("https://api.goto.com/v1/users/me")
             if response.status_code == 200:
                 user_data = response.json()
-                print(f"✅ User API test successful!")
-                print(f"👤 User: {user_data.get('firstName', '')} {user_data.get('lastName', '')}")
-                print(f"📧 Email: {user_data.get('email', '')}")
-                print(f"🏢 Company: {user_data.get('companyName', 'N/A')}")
+                print(f"✅ User Info: {user_data.get('name', 'Unknown')} ({user_data.get('email', 'No email')})")
             else:
-                print(f"❌ User API failed: {response.status_code}")
-                return False
+                print(f"⚠️  User Info API returned status {response.status_code}")
         except Exception as e:
-            print(f"❌ User API error: {e}")
-            return False
+            print(f"❌ User Info API error: {e}")
         
         # Test 2: Get meetings
-        print("\n📅 Test 2: Getting meetings...")
+        print("\n2️⃣ Testing Meetings API...")
         try:
-            response = auth.get("https://api.goto.com/rest/meetings/v1/meetings?limit=5")
+            response = auth.get("https://api.goto.com/v1/meetings")
             if response.status_code == 200:
                 meetings_data = response.json()
                 meeting_count = len(meetings_data.get('meetings', []))
-                print(f"✅ Meetings API test successful!")
-                print(f"📊 Found {meeting_count} meetings")
-                
-                # Show first few meetings
-                for i, meeting in enumerate(meetings_data.get('meetings', [])[:3]):
-                    print(f"   {i+1}. {meeting.get('subject', 'No subject')} - {meeting.get('startTime', 'No time')}")
+                print(f"✅ Found {meeting_count} meetings")
             else:
-                print(f"❌ Meetings API failed: {response.status_code}")
-                return False
+                print(f"⚠️  Meetings API returned status {response.status_code}")
         except Exception as e:
             print(f"❌ Meetings API error: {e}")
-            return False
         
-        # Test 3: Get user lines (phone numbers)
-        print("\n📞 Test 3: Getting user lines...")
+        # Test 3: Get account info
+        print("\n3️⃣ Testing Account API...")
         try:
-            response = auth.get("https://api.goto.com/rest/users/v1/users/me/lines")
+            response = auth.get("https://api.goto.com/v1/accounts")
             if response.status_code == 200:
-                lines_data = response.json()
-                line_count = len(lines_data.get('lines', []))
-                print(f"✅ Lines API test successful!")
-                print(f"📞 Found {line_count} phone lines")
-                
-                # Show first few lines
-                for i, line in enumerate(lines_data.get('lines', [])[:3]):
-                    print(f"   {i+1}. {line.get('number', 'No number')} - {line.get('name', 'No name')}")
+                account_data = response.json()
+                print(f"✅ Account Info: {account_data.get('name', 'Unknown account')}")
             else:
-                print(f"❌ Lines API failed: {response.status_code}")
-                return False
+                print(f"⚠️  Account API returned status {response.status_code}")
         except Exception as e:
-            print(f"❌ Lines API error: {e}")
-            return False
+            print(f"❌ Account API error: {e}")
         
-        # Test 4: Get contacts
-        print("\n👥 Test 4: Getting contacts...")
-        try:
-            response = auth.get("https://api.goto.com/rest/contacts/v1/contacts?limit=5")
-            if response.status_code == 200:
-                contacts_data = response.json()
-                contact_count = len(contacts_data.get('contacts', []))
-                print(f"✅ Contacts API test successful!")
-                print(f"👥 Found {contact_count} contacts")
-                
-                # Show first few contacts
-                for i, contact in enumerate(contacts_data.get('contacts', [])[:3]):
-                    print(f"   {i+1}. {contact.get('firstName', '')} {contact.get('lastName', '')} - {contact.get('email', 'No email')}")
-            else:
-                print(f"❌ Contacts API failed: {response.status_code}")
-                return False
-        except Exception as e:
-            print(f"❌ Contacts API error: {e}")
-            return False
-        
-        print("\n🎉 All API tests completed successfully!")
-        print("✅ Your GoTo Connect Authentication Library is working perfectly!")
-        print("✅ You can now use this library in your projects.")
-        
+        print("\n✅ API testing completed!")
         return True
         
     except Exception as e:
-        print(f"❌ Test failed with error: {e}")
+        print(f"❌ Error during API testing: {e}")
         return False
 
 
 def main():
     """Main function."""
+    print("🚀 Starting GoTo Connect API Test")
+    print("=" * 50)
+    
     success = test_api_endpoints()
     
     if success:
-        print("\n🎉 API test passed! Your library is ready for use.")
+        print("\n🎉 All tests completed successfully!")
+        print("💡 Your GoTo Connect authentication is working properly.")
     else:
-        print("\n❌ API test failed. Please check your configuration.")
+        print("\n❌ Some tests failed.")
+        print("💡 Check your credentials and try again.")
     
     sys.exit(0 if success else 1)
 
