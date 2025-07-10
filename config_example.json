@@ -1,0 +1,7 @@
+{
+    "client_id": "your_go_to_connect_client_id_here",
+    "client_secret": "your_go_to_connect_client_secret_here",
+    "redirect_uri": "http://localhost:8080/callback",
+    "auth_url": "https://authentication.logmeininc.com/oauth/authorize",
+    "token_url": "https://authentication.logmeininc.com/oauth/token"
+} 

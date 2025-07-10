@@ -1,0 +1,8 @@
+# GoTo Connect API Credentials
+GOTO_CLIENT_ID=your_go_to_connect_client_id_here
+GOTO_CLIENT_SECRET=your_go_to_connect_client_secret_here
+
+# OAuth Configuration (optional - defaults will be used if not set)
+GOTO_REDIRECT_URI=http://localhost:8080/callback
+GOTO_AUTH_URL=https://authentication.logmeininc.com/oauth/authorize
+GOTO_TOKEN_URL=https://authentication.logmeininc.com/oauth/token 
