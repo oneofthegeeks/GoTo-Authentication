@@ -1,23 +1,24 @@
 """
 GoTo Connect Authentication Library
 
-A reusable Python library for authenticating with GoTo Connect APIs.
+A simple, reusable Python library for authenticating with GoTo Connect APIs.
 """
 
-from .auth import GoToConnectAuth
-from .storage import KeyringTokenStorage, FileTokenStorage, MemoryTokenStorage
-from .exceptions import GoToConnectAuthError, TokenExpiredError, AuthenticationError
+from .simple_auth import GoToConnectAuth
+from .simple_storage import SecureTokenStorage, FileTokenStorage, MemoryTokenStorage
+from .exceptions import GoToConnectAuthError, AuthenticationError, TokenExpiredError, ConfigurationError
 
 __version__ = "1.0.0"
-__author__ = "Your Name"
-__email__ = "your.email@example.com"
+__author__ = "GoTo Connect Auth Library"
+__email__ = "support@example.com"
 
 __all__ = [
     "GoToConnectAuth",
-    "KeyringTokenStorage",
+    "SecureTokenStorage",
     "FileTokenStorage", 
     "MemoryTokenStorage",
     "GoToConnectAuthError",
-    "TokenExpiredError",
     "AuthenticationError",
-] 
+    "TokenExpiredError",
+    "ConfigurationError",
+]
