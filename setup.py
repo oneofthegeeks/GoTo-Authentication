@@ -6,9 +6,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="gotoconnect-auth",
     version="1.0.0",
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="A reusable authentication library for GoTo Connect APIs",
+    author="GoTo Connect Auth Library",
+    author_email="support@example.com",
+    description="A simple, reusable authentication library for GoTo Connect APIs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/gotoconnect-auth",
@@ -30,7 +30,6 @@ setup(
         "requests>=2.25.0",
         "python-dotenv>=0.19.0",
         "keyring>=23.0.0",
-        "cryptography>=3.4.0",
     ],
     extras_require={
         "dev": [
@@ -38,7 +37,11 @@ setup(
             "pytest-cov>=2.0",
             "black>=21.0",
             "flake8>=3.8",
-            "mypy>=0.800",
         ]
     },
-) 
+    entry_points={
+        "console_scripts": [
+            "gotoconnect-auth=gotoconnect_auth:main",
+        ],
+    },
+)
