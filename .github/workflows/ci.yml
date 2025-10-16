@@ -24,14 +24,18 @@ jobs:
     
     - name: Install dependencies
       run: |
+        python -m venv venv
+        source venv/bin/activate
         python -m pip install --upgrade pip
         pip install -e .
         pip install flake8
     
     - name: Lint with flake8
       run: |
+        source venv/bin/activate
         flake8 gotoconnect_auth/ examples/ --count --exit-zero --max-line-length=127
     
     - name: Test with pytest
       run: |
+        source venv/bin/activate
         python test_release.py
