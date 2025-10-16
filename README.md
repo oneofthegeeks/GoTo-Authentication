@@ -2,7 +2,7 @@
 
 A simple, reusable Python library for authenticating with GoTo Connect APIs. This library handles OAuth 2.0 authentication, automatic token refresh, and secure credential storage.
 
-[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 🚀 Quick Start
