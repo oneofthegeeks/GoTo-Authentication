@@ -56,7 +56,7 @@ pip install gotoconnect-auth
 
 ### From Source
 ```bash
-git clone https://github.com/yourusername/gotoconnect-auth.git
+git clone https://github.com/oneofthegeeks/GoTo-Authentication.git
 cd gotoconnect-auth
 pip install -e .
 ```
@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/gotoconnect-auth.git
+git clone https://github.com/oneofthegeeks/GoTo-Authentication.git
 cd gotoconnect-auth
 
 # Install in development mode
