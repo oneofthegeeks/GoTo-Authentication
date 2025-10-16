@@ -11,7 +11,7 @@ setup(
     description="A simple, reusable authentication library for GoTo Connect APIs",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/gotoconnect-auth",
+    url="https://github.com/oneofthegeeks/GoTo-Authentication",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
