@@ -166,9 +166,11 @@ class GoToConnectAuth:
         parsed_uri = urlparse(self.redirect_uri)
         port = parsed_uri.port or 8080
         
+        auth_self = self
+
         class Handler(SimpleOAuthHandler):
             def __init__(self, *args, **kwargs):
-                super().__init__(*args, auth_instance=self, **kwargs)
+                super().__init__(*args, auth_instance=auth_self, **kwargs)
         
         server = HTTPServer(('localhost', port), Handler)
         server_thread = Thread(target=server.serve_forever, daemon=True)
@@ -183,19 +185,21 @@ class GoToConnectAuth:
         
         token_data = {
             'grant_type': 'authorization_code',
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
             'code': self._auth_code,
             'redirect_uri': self.redirect_uri
         }
-        
+
         try:
-            response = requests.post(self.TOKEN_URL, data=token_data)
+            response = requests.post(
+                self.TOKEN_URL,
+                data=token_data,
+                auth=(self.client_id, self.client_secret),
+            )
             response.raise_for_status()
-            
+
             tokens = response.json()
             self._process_tokens(tokens)
-            
+
         except requests.exceptions.RequestException as e:
             raise AuthenticationError(f"Failed to exchange code for tokens: {e}")
     
@@ -206,13 +210,15 @@ class GoToConnectAuth:
         
         token_data = {
             'grant_type': 'refresh_token',
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
             'refresh_token': self._refresh_token
         }
-        
+
         try:
-            response = requests.post(self.TOKEN_URL, data=token_data)
+            response = requests.post(
+                self.TOKEN_URL,
+                data=token_data,
+                auth=(self.client_id, self.client_secret),
+            )
             response.raise_for_status()
             
             tokens = response.json()
