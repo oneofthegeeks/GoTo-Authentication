@@ -1,8 +1,13 @@
 # GoTo Connect Authentication Library
 
+> **Archived (2026-11-22).** This library is no longer maintained. Its successor is
+> [aiogotoconnect](https://github.com/oneofthegeeks/aiogotoconnect) (`pip install aiogotoconnect`):
+> async GoTo Connect OAuth with token refresh, plus SMS and calls. v1.0.1 here still works and
+> includes the OAuth callback and Basic-auth token fixes.
+
 A simple, reusable Python library for authenticating with GoTo Connect APIs. This library handles OAuth 2.0 authentication, automatic token refresh, and secure credential storage.
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 🚀 Quick Start
