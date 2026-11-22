@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONUTF8: "1" # the smoke test prints emoji; Windows' default console encoding can't
     strategy:
       fail-fast: false
       matrix:
