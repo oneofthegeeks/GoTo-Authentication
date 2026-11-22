@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="gotoconnect-auth",
-    version="1.0.0",
+    version="1.0.1",
     author="GoTo Connect Auth Library",
     author_email="support@example.com",
     description="A simple, reusable authentication library for GoTo Connect APIs",
